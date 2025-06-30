@@ -49,7 +49,7 @@ This pipeline:
 ## Repository Structure & File Descriptions
 
 ```
-neuron-emodel-optimisation/
+NeuroForge-Optimizer/
 ├── environment.yml              # Conda environment definition
 ├── .gitignore                  # Git ignore patterns
 ├── README.md                   # This comprehensive documentation
@@ -67,14 +67,23 @@ neuron-emodel-optimisation/
 ├── configs/                    # Configuration files
 │   ├── emodel.yaml            # E-model optimization config
 │   └── feature_weights.yaml   # Feature importance weights
-├── scripts/                    # Analysis scripts
-│   ├── Obaid_simulation_file.py  # Original simulation (legacy)
-│   ├── load_morph_check.py      # Morphology visualization
-│   ├── feature_extract.py       # Feature extraction
-│   ├── optimise.py              # Parameter optimization
-│   ├── run_best.py              # Run with best parameters
-│   ├── run_obaid.py             # Refactored Obaid simulation
-│   └── sensitivity_analysis.py  # Parameter sensitivity
+├── scripts/                    # Core simulation & optimization scripts
+│   ├── README.md              # Detailed script documentation
+│   ├── Obaid_simulation_file.py  # Core simulation engine
+│   ├── load_morph_check.py      # Morphology loading & visualization
+│   ├── feature_extract.py       # Experimental feature extraction
+│   ├── optimise.py              # Parameter optimization engine
+│   ├── run_best.py              # Optimized model validation
+│   ├── run_obaid.py             # Obaid-specific simulations
+│   └── sensitivity_analysis.py  # Parameter sensitivity analysis
+├── model_evaluation/           # Model testing & validation tools
+│   ├── README.md              # Model evaluation documentation
+│   ├── model_evaluation.py    # Comprehensive model validation
+│   ├── parameter_tuning.py    # Manual parameter optimization
+│   ├── quick_model_test.py    # Fast model health checks
+│   ├── advanced_stimulation_tests.py  # Complex stimulation protocols
+│   ├── test_model_stimulation.py      # Comprehensive testing framework
+│   └── *.png                  # Evaluation result visualizations
 ├── optimisation/               # Optimization outputs (ignored by git)
 ├── features/                   # Extracted features (auto-generated)
 ├── sensitivity_analysis/       # Sensitivity analysis results (auto-generated)
@@ -225,13 +234,25 @@ python scripts/run_best.py
 
 # Run original Obaid simulation with optimized parameters
 python scripts/run_obaid.py
+
+# Comprehensive model evaluation
+python model_evaluation/model_evaluation.py
+
+# Quick model health check
+python model_evaluation/quick_model_test.py
 ```
 
-### 6. Sensitivity Analysis
+### 6. Advanced Analysis
 
 ```bash
-# Analyze parameter sensitivity
+# Parameter sensitivity analysis
 python scripts/sensitivity_analysis.py
+
+# Advanced stimulation testing
+python model_evaluation/advanced_stimulation_tests.py
+
+# Parameter tuning
+python model_evaluation/parameter_tuning.py
 ```
 
 ## Configuration
@@ -288,7 +309,20 @@ Place voltage recordings in `recordings/` directory:
 
 #### **`scripts/` Directory**
 
-The core analysis scripts implementing the optimization workflow:
+The core analysis scripts implementing the optimization workflow. See `scripts/README.md` for detailed documentation.
+
+#### **`model_evaluation/` Directory**
+
+Comprehensive model testing and validation tools for assessing e-model quality:
+
+- **`model_evaluation.py`**: Quantitative validation against experimental recordings
+- **`parameter_tuning.py`**: Manual parameter optimization and sensitivity analysis  
+- **`quick_model_test.py`**: Fast model health checks with essential tests
+- **`advanced_stimulation_tests.py`**: Complex stimulation protocols (ramps, bursts, noise)
+- **`test_model_stimulation.py`**: Comprehensive testing framework
+- **Result Visualizations**: PNG files showing evaluation outcomes
+
+See `model_evaluation/README.md` for comprehensive documentation on model evaluation concepts, usage examples, and validation workflows.
 
 ### **`scripts/load_morph_check.py`** - Morphology Validation
 **Purpose**: Validates and visualizes neuron morphology loading
