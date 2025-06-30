@@ -1,0 +1,121 @@
+# E-model configuration for single-cell optimization
+# Compatible with emodel-runner from singlecell-emodel-suite
+
+name: "obaid_emodel"
+description: "Single neuron e-model optimization for 720575940622093546_obaid"
+
+# Morphology configuration
+morphology:
+  path: "../morphologies/720575940622093546_obaid.swc"
+  name: "720575940622093546_obaid"
+
+# Ion channel mechanisms
+mechanisms:
+  path: "../mechanisms"
+  # Mechanisms will be compiled automatically
+  channels:
+    - "NaTa_t"
+    - "NaP_Et2"
+    - "Kv3_1"
+    - "K_T"
+    - "SK_E2"
+    - "Ca_HVA"
+    - "Ca_LVAst"
+    - "CaDynamics_E2"
+    - "Ih"
+
+# Cell regions for parameter assignment
+regions:
+  soma:
+    sections: ["soma"]
+  axon:
+    sections: ["axon"]
+  basal:
+    sections: ["dend"]
+  apical:
+    sections: ["apic"]
+
+# Parameters to optimize
+parameters:
+  # Passive parameters
+  - name: "g_pas"
+    region: "all"
+    bounds: [1e-6, 1e-3]
+    distribution: "uniform"
+    
+  - name: "Ra"
+    region: "all"
+    bounds: [50, 200]
+    distribution: "uniform"
+    
+  - name: "cm"
+    region: "all"
+    bounds: [0.5, 2.0]
+    distribution: "uniform"
+    
+  # Active parameters - Sodium channels
+  - name: "gbar_NaTa_t"
+    region: "soma"
+    bounds: [0, 2.0]
+    distribution: "uniform"
+    
+  - name: "gbar_NaP_Et2"
+    region: "soma"
+    bounds: [0, 0.01]
+    distribution: "uniform"
+    
+  # Potassium channels
+  - name: "gbar_Kv3_1"
+    region: "soma"
+    bounds: [0, 2.0]
+    distribution: "uniform"
+    
+  - name: "gbar_K_T"
+    region: "soma"
+    bounds: [0, 0.1]
+    distribution: "uniform"
+    
+  - name: "gbar_SK_E2"
+    region: "soma"
+    bounds: [0, 0.1]
+    distribution: "uniform"
+    
+  # Calcium channels
+  - name: "gbar_Ca_HVA"
+    region: "soma"
+    bounds: [0, 0.01]
+    distribution: "uniform"
+    
+  - name: "gbar_Ca_LVAst"
+    region: "soma"
+    bounds: [0, 0.01]
+    distribution: "uniform"
+    
+  # HCN channel
+  - name: "gbar_Ih"
+    region: "soma"
+    bounds: [0, 0.01]
+    distribution: "uniform"
+
+# Optimization settings
+optimization:
+  algorithm: "CMA-ES"
+  population_size: 50
+  max_generations: 100
+  seed: 42
+  
+# Feature extraction settings
+features:
+  protocol_file: "../protocols/step_proto.json"
+  feature_file: "../protocols/step_features.json"
+  
+# Recording settings
+recordings:
+  path: "../recordings"
+  format: "csv"  # or "abf"
+  
+# Output settings
+output:
+  path: "../optimisation"
+  save_responses: true
+  plot_responses: true

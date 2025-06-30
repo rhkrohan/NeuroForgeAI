@@ -1,0 +1,167 @@
+name: Neuron E-Model CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true  # Enable Git LFS for large recording files
+    
+    - name: Setup Conda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        environment-file: environment.yml
+        activate-environment: neuron-emodel-opt
+        python-version: 3.11
+        auto-activate-base: false
+        use-mamba: true  # Faster package resolution
+    
+    - name: Cache Conda packages
+      uses: actions/cache@v3
+      with:
+        path: ~/conda_pkgs_dir
+        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+    
+    - name: Install additional dependencies
+      shell: bash -el {0}
+      run: |
+        conda info
+        conda list
+        pip install --upgrade pip
+    
+    - name: Compile NEURON mechanisms
+      shell: bash -el {0}
+      run: |
+        cd mechanisms
+        nrnivmodl
+        ls -la
+    
+    - name: Test morphology loading
+      shell: bash -el {0}
+      run: |
+        # Test morphology loading (non-interactive)
+        python -c "
+        import sys
+        sys.path.append('scripts')
+        from load_morph_check import load_and_plot_morphology
+        from pathlib import Path
+        
+        morph_path = Path('morphologies/720575940622093546_obaid.swc')
+        try:
+            fig, ax = load_and_plot_morphology(morph_path)
+            print('Morphology loading test: PASSED')
+        except Exception as e:
+            print(f'Morphology loading test: FAILED - {e}')
+            sys.exit(1)
+        "
+    
+    - name: Test configuration files
+      shell: bash -el {0}
+      run: |
+        # Validate YAML configuration
+        python -c "
+        import yaml
+        import sys
+        
+        try:
+            with open('configs/emodel.yaml', 'r') as f:
+                config = yaml.safe_load(f)
+            print('E-model config validation: PASSED')
+            print(f'Found {len(config.get(\"parameters\", []))} parameters')
+        except Exception as e:
+            print(f'E-model config validation: FAILED - {e}')
+            sys.exit(1)
+        "
+    
+    - name: Test imports and basic functionality
+      shell: bash -el {0}
+      run: |
+        # Test that all required packages can be imported
+        python -c "
+        import neuron
+        import bluepyopt
+        import bluepyefe
+        import efel
+        import numpy
+        import matplotlib
+        print('All package imports: PASSED')
+        
+        # Test NEURON basic functionality
+        from neuron import h
+        soma = h.Section(name='soma')
+        soma.L = 20
+        soma.diam = 20
+        print('NEURON basic functionality: PASSED')
+        "
+    
+    - name: Smoke test simulation script
+      shell: bash -el {0}
+      run: |
+        # Test simulation script (basic functionality only)
+        python -c "
+        import sys
+        sys.path.append('scripts')
+        
+        # Test the basic functions without running full simulation
+        from run_obaid import setup_stimulation, run_simulation
+        from neuron import h
+        
+        # Create basic cell
+        soma = h.Section(name='soma')
+        soma.L = 20
+        soma.diam = 20
+        soma.insert('pas')
+        
+        # Test stimulation setup
+        stimuli, recordings, amps = setup_stimulation(soma, num_steps=2)
+        print(f'Stimulation setup test: PASSED - {len(stimuli)} stimuli created')
+        "
+    
+    - name: Upload artifacts on failure
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: debug-artifacts
+        path: |
+          *.log
+          *.png
+          mechanisms/
+        retention-days: 7
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install linting tools
+      run: |
+        pip install flake8 black isort
+    
+    - name: Run linting
+      run: |
+        # Check Python code formatting
+        black --check scripts/
+        
+        # Check import sorting
+        isort --check-only scripts/
+        
+        # Check code style
+        flake8 scripts/ --max-line-length=100 --ignore=E203,W503

@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# NEURON compiled mechanisms
+*.o
+*.c
+*.mod.bak
+x86_64/
+mechanisms/x86_64/
+mechanisms/*.o
+mechanisms/*.c
+nrnmech.dll
+libnrnmech.*
+
+# Optimisation outputs (large files)
+optimisation/
+results/
+*.pkl
+*.pickle
+*.hdf5
+*.h5
+
+# Data files (use Git LFS instead)
+recordings/*.abf
+recordings/*.dat
+*.abf
+*.dat
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Conda
+.conda/
+
+# Temporary files
+*.tmp
+*.temp
+temp_*

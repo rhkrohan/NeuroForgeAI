@@ -1,0 +1,81 @@
+# Feature weights for e-model optimization
+# Higher weights prioritize matching specific features
+
+# Voltage features
+voltage_features:
+  # Spike features
+  Spikecount:
+    weight: 10.0
+    description: "Number of spikes in response"
+    
+  ISI_mean:
+    weight: 5.0
+    description: "Mean inter-spike interval"
+    
+  ISI_CV:
+    weight: 3.0
+    description: "Coefficient of variation of ISI"
+    
+  # Spike shape features
+  AP_amplitude:
+    weight: 8.0
+    description: "Action potential amplitude"
+    
+  AP_width:
+    weight: 6.0
+    description: "Action potential width at half maximum"
+    
+  AHP_depth:
+    weight: 7.0
+    description: "Afterhyperpolarization depth"
+    
+  # Threshold features
+  AP_threshold:
+    weight: 8.0
+    description: "Action potential threshold"
+    
+  # Passive features
+  voltage_base:
+    weight: 5.0
+    description: "Baseline voltage"
+    
+  steady_state_voltage:
+    weight: 6.0
+    description: "Steady state voltage response"
+    
+  sag_amplitude:
+    weight: 4.0
+    description: "Sag amplitude for hyperpolarizing steps"
+    
+  sag_ratio1:
+    weight: 3.0
+    description: "Sag ratio (first)"
+    
+# Current step specific weights
+current_steps:
+  # Rheobase and near-threshold responses
+  rheobase:
+    weight_multiplier: 2.0
+    description: "Extra weight for rheobase current"
+    
+  subthreshold:
+    weight_multiplier: 1.5
+    description: "Extra weight for subthreshold responses"
+    
+  suprathreshold:
+    weight_multiplier: 1.2
+    description: "Extra weight for suprathreshold responses"
+
+# Protocol-specific settings
+protocols:
+  step_current:
+    enabled: true
+    weight_multiplier: 1.0
+    
+  ramp_current:
+    enabled: false
+    weight_multiplier: 0.8
+    
+  noise_current:
+    enabled: false
+    weight_multiplier: 0.5

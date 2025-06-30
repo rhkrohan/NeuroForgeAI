@@ -1,0 +1,16 @@
+# Example voltage recording file
+# Format: time (ms), voltage (mV), current (nA)
+# This is a placeholder - replace with actual experimental data
+time,voltage,current
+0.0,-65.0,0.0
+0.025,-65.0,0.0
+0.05,-65.0,0.0
+100.0,-65.0,0.0
+100.025,-64.5,0.1
+200.0,-55.0,0.1
+300.0,-45.0,0.1
+400.0,-40.0,0.1
+500.0,-45.0,0.1
+600.0,-65.0,0.0
+700.0,-65.0,0.0
+800.0,-65.0,0.0
