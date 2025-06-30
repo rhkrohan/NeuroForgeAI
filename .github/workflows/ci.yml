@@ -1,10 +1,12 @@
 name: Neuron E-Model CI
 
+# Temporarily disable CI until local environment is set up
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:  # Manual trigger only
+  # push:
+  #   branches: [ main, develop ]
+  # pull_request:
+  #   branches: [ main ]
 
 jobs:
   test:
